@@ -1,0 +1,65 @@
+language: python
+python: "3.5"
+dist: trusty
+sudo: true
+
+env:
+  global:
+    - PKG=colcon_ros_bazel
+  matrix:
+    - TEST_SUITE=pytest
+    - TEST_SUITE=bootstrap
+
+addons:
+  apt:
+    packages:
+      - oracle-java8-set-default
+
+before_install:
+  - sudo apt update && sudo apt install -y enchant dput apt-file fakeroot debhelper python-setuptools python3-setuptools python-all python3-all python-pip python3-pip
+  - sudo apt-file update
+
+install:
+  - pip3 install -U setuptools stdeb
+  # install_requires
+  - pip3 install -U git+https://github.com/colcon/colcon-core
+  - pip3 install -U git+https://github.com/colcon/colcon-library-path
+  - pip3 install -U git+https://github.com/colcon/colcon-argcomplete
+  - pip3 install -U git+https://github.com/colcon/colcon-bazel
+  - pip3 install -U git+https://github.com/colcon/colcon-ros
+  - pip3 install -U pyparsing argcomplete
+  # tests_require
+  - pip3 install -U flake8-blind-except flake8-builtins flake8-class-newline flake8-comprehensions flake8-deprecated flake8-docstrings flake8-quotes pep8-naming pyenchant pylint pytest pytest-cov
+  # for uploading the coverage information to codecov
+  - pip3 install codecov
+
+script:
+  # invoke pytest
+  - if [ "$TEST_SUITE" = "pytest" ]; then pytest --cov=$PKG --cov-branch; fi
+  # build and test package using colcon itself
+  - if [ "$TEST_SUITE" = "bootstrap" ]; then colcon build; fi
+  - if [ "$TEST_SUITE" = "bootstrap" ]; then colcon test; fi
+  # use the installed package
+  - if [ "$TEST_SUITE" = "bootstrap" ]; then . install/local_setup.sh; fi
+  - if [ "$TEST_SUITE" = "bootstrap" ]; then colcon --help; fi
+
+after_failure:
+  - if [ "$TEST_SUITE" = "bootstrap" ]; then colcon test-result; fi
+
+after_success:
+  - if [ "$TEST_SUITE" = "pytest" ]; then codecov; fi
+  - if [ "$TEST_SUITE" = "pytest" ]; then git clone --depth=50 https://github.com/ros-infrastructure/ros_release_python.git ../ros_release_python && ../ros_release_python/scripts/ros_release_python deb3; fi
+
+notifications:
+  email: false
+
+deploy:
+  provider: pypi
+  user: $PYPI_USER
+  password: $PYPI_PASS
+  skip_cleanup: true
+  distributions: "sdist bdist_wheel"
+  on:
+    tags: true
+    branch: master
+    condition: $TEST_SUITE = pytest
