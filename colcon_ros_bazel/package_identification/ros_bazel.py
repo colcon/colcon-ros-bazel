@@ -51,16 +51,13 @@ class RosBazelPackageIdentification(PackageIdentificationExtensionPoint):
         if data['name'] == None:
             return
 
-        build_deps = {DependencyDescriptor(name)
-                      for name in data['depends']['build']}
-        run_deps = {DependencyDescriptor(name)
-                    for name in data['depends']['run']}
-        test_deps = {DependencyDescriptor(name)
-                     for name in data['depends']['test']}
         # Add dependencies.
-        tmp_desc.dependencies['build'] |= build_deps
-        tmp_desc.dependencies['run'] |= run_deps
-        tmp_desc.dependencies['test'] |= test_deps
+        tmp_desc.dependencies['build'] |= {
+            DependencyDescriptor(name) for name in data['depends']['build']}
+        tmp_desc.dependencies['run'] |= {
+            DependencyDescriptor(name) for name in data['depends']['run']}
+        tmp_desc.dependencies['test'] |= {
+            DependencyDescriptor(name) or name in data['depends']['test']}
 
         # Update package descriptor instance (if has valide build type).
         desc.type = tmp_desc.type
