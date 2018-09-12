@@ -4,6 +4,7 @@
 
 import copy
 
+from colcon_core.dependency_descriptor import DependencyDescriptor
 from colcon_core.package_identification \
     import PackageIdentificationExtensionPoint
 from colcon_core.plugin_system import satisfies_version
@@ -51,9 +52,12 @@ class RosBazelPackageIdentification(PackageIdentificationExtensionPoint):
             return
 
         # Add dependencies.
-        tmp_desc.dependencies['build'] |= data['depends']['build']
-        tmp_desc.dependencies['run'] |= data['depends']['run']
-        tmp_desc.dependencies['test'] |= data['depends']['test']
+        tmp_desc.dependencies['build'] |= {
+            DependencyDescriptor(name) for name in data['depends']['build']}
+        tmp_desc.dependencies['run'] |= {
+            DependencyDescriptor(name) for name in data['depends']['run']}
+        tmp_desc.dependencies['test'] |= {
+            DependencyDescriptor(name) or name in data['depends']['test']}
 
         # Update package descriptor instance (if has valide build type).
         desc.type = tmp_desc.type
