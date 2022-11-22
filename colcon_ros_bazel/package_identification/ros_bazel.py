@@ -34,7 +34,7 @@ class RosBazelPackageIdentification(PackageIdentificationExtensionPoint):
         # the build type is a "common", one like "cmake".
         tmp_desc = copy.deepcopy(desc)
 
-        # Call ROS package identification extention.
+        # Call ROS package identification extension.
         ros_extension = RosPackageIdentification()
         ros_extension.identify(tmp_desc)
 
@@ -42,7 +42,7 @@ class RosBazelPackageIdentification(PackageIdentificationExtensionPoint):
         if tmp_desc.type != 'ros.bazel':
             return
 
-        # Call bazel package identification extention
+        # Call bazel package identification extension
         # (for append bazel logic).
         data = extract_data(tmp_desc.path)
 
@@ -55,7 +55,7 @@ class RosBazelPackageIdentification(PackageIdentificationExtensionPoint):
         tmp_desc.dependencies['run'] |= data['depends']['run']
         tmp_desc.dependencies['test'] |= data['depends']['test']
 
-        # Update package descriptor instance (if has valide build type).
+        # Update package descriptor instance (if has valid build type).
         desc.type = tmp_desc.type
         desc.name = tmp_desc.name
         desc.dependencies = tmp_desc.dependencies
