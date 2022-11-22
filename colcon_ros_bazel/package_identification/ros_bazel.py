@@ -4,17 +4,15 @@
 
 import copy
 
+from colcon_bazel.package_identification.bazel import extract_data
 from colcon_core.package_identification \
     import PackageIdentificationExtensionPoint
 from colcon_core.plugin_system import satisfies_version
-from colcon_bazel.package_identification.bazel import extract_data
 from colcon_ros.package_identification.ros import RosPackageIdentification
 
 
 class RosBazelPackageIdentification(PackageIdentificationExtensionPoint):
-    """
-    Identify ROS bazel packages with `package.xml` and `BUILD.bazel` files.
-    """
+    """Identify ROS bazel packages with `package.xml`/`BUILD.bazel` files."""
 
     # the priority needs to be higher than the ROS extensions identifying
     # packages using the build systems supported by ROS bazel.
@@ -47,7 +45,7 @@ class RosBazelPackageIdentification(PackageIdentificationExtensionPoint):
         data = extract_data(tmp_desc.path)
 
         # Validate that is bazel package logic.
-        if data['name'] == None:
+        if data['name'] is None:
             return
 
         # Add dependencies.

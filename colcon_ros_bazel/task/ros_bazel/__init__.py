@@ -4,7 +4,6 @@
 import os
 from pathlib import Path
 import shutil
-import subprocess
 
 from colcon_core.environment_variable import EnvironmentVariable
 from colcon_core.subprocess import check_output
@@ -12,7 +11,7 @@ from colcon_core.subprocess import check_output
 """Environment variable to override the Bazel executable"""
 BAZEL_COMMAND_ENVIRONMENT_VARIABLE = EnvironmentVariable(
     'BAZEL_COMMAND', 'The full path to the Bazel executable')
-    
+
 """Environment variable to override the Bazel executable"""
 BAZEL_HOME_ENVIRONMENT_VARIABLE = EnvironmentVariable(
     'BAZEL_HOME', 'The full path to the Bazel home')
@@ -22,6 +21,7 @@ IS_WINDOWS = os.name == 'nt'
 
 """Check OS"""
 IS_WINDOWS = os.name == 'nt'
+
 
 def which_executable(environment_variable, executable_name):
     """
@@ -37,7 +37,7 @@ def which_executable(environment_variable, executable_name):
     cmd = None
     env_cmd = os.getenv(environment_variable)
     env_home = os.getenv(BAZEL_HOME_ENVIRONMENT_VARIABLE.name)
-    
+
     # Case of BAZEL_COMMAND (colcon)
     if env_cmd is not None and Path(env_cmd).is_file():
         cmd = env_cmd
@@ -53,6 +53,7 @@ def which_executable(environment_variable, executable_name):
         cmd = shutil.which(executable_name)
 
     return cmd
+
 
 BAZEL_EXECUTABLE = which_executable(
     BAZEL_COMMAND_ENVIRONMENT_VARIABLE.name, 'bazel')
@@ -81,5 +82,4 @@ async def get_bazel_tasks(path):
         BAZEL_EXECUTABLE, 'tasks'], cwd=path)
     lines = output.decode().splitlines()
     separator = ' - '
-    return [l.split(separator)[0] for l in lines if separator in l]
-
+    return [line.split(separator)[0] for line in lines if separator in line]
