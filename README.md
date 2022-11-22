@@ -1,8 +1,7 @@
 colcon-ros-bazel
 =================
 
-[![Travis CI](https://travis-ci.org/colcon/colcon-ros-bazel.svg?branch=master)](https://travis-ci.org/colcon/colcon-ros-bazel)
-[![AppVeyor](https://ci.appveyor.com/api/projects/status/github/colcon/colcon-ros-bazel?svg=true&branch=master)](https://ci.appveyor.com/project/Theosakamg/colcon-ros-bazel)
+[![GitHub Workflow](https://github.com/colcon/colcon-ros-bazel/actions/workflows/ci.yaml/badge.svg?branch=master&event=push)](https://github.com/colcon/colcon-ros-bazel/actions/workflows/ci.yaml?query=branch%3Amaster+event%3Apush)
 [![codecov](https://codecov.io/gh/colcon/colcon-ros-bazel/branch/master/graph/badge.svg)](https://codecov.io/gh/colcon/colcon-ros-bazel)
 [![PyPI version](https://img.shields.io/pypi/v/colcon_ros_bazel.svg)](https://pypi.python.org/pypi/colcon_ros_bazel/)
 
