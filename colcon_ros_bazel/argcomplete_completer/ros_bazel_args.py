@@ -23,7 +23,7 @@ class RosBazelArgcompleteCompleter(ArgcompleteCompleterExtensionPoint):
             ArgcompleteCompleterExtensionPoint.EXTENSION_POINT_VERSION, '^1.0')
 
     def get_completer(self, parser, *args, **kwargs):  # noqa: D102
-        bazel_extention = BazelArgcompleteCompleter()
-        choices = bazel_extention.get_completer(parser, args, kwargs)
+        bazel_extension = BazelArgcompleteCompleter()
+        choices = bazel_extension.get_completer(parser, args, kwargs)
 
         return choices
