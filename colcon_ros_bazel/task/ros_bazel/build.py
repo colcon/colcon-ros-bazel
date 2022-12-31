@@ -29,9 +29,9 @@ class RosBazelBuildTask(TaskExtensionPoint):
 #            '--bazel-task',
 #            help='Run a specific task instead of the default task')
 
-    async def build(
+    async def build(  # noqa: D102
         self, *, additional_hooks=None, skip_hook_creation=False
-    ):  # noqa: D102
+    ):
         args = self.context.args
         logger.info(
             "Building ROS package in '{args.path}' with build type 'ros.bazel'"
