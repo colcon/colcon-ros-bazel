@@ -41,4 +41,3 @@ class RosBazelTestTask(TaskExtensionPoint):
         extension.set_context(context=self.context)
 
         return await extension.test()
-

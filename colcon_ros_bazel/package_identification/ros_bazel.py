@@ -4,17 +4,15 @@
 
 import copy
 
+from colcon_bazel.package_identification.bazel import extract_data
 from colcon_core.package_identification \
     import PackageIdentificationExtensionPoint
 from colcon_core.plugin_system import satisfies_version
-from colcon_bazel.package_identification.bazel import extract_data
 from colcon_ros.package_identification.ros import RosPackageIdentification
 
 
 class RosBazelPackageIdentification(PackageIdentificationExtensionPoint):
-    """
-    Identify ROS bazel packages with `package.xml` and `BUILD.bazel` files.
-    """
+    """Identify ROS bazel packages with `package.xml`/`BUILD.bazel` files."""
 
     # the priority needs to be higher than the ROS extensions identifying
     # packages using the build systems supported by ROS bazel.
@@ -34,7 +32,7 @@ class RosBazelPackageIdentification(PackageIdentificationExtensionPoint):
         # the build type is a "common", one like "cmake".
         tmp_desc = copy.deepcopy(desc)
 
-        # Call ROS package identification extention.
+        # Call ROS package identification extension.
         ros_extension = RosPackageIdentification()
         ros_extension.identify(tmp_desc)
 
@@ -42,12 +40,12 @@ class RosBazelPackageIdentification(PackageIdentificationExtensionPoint):
         if tmp_desc.type != 'ros.bazel':
             return
 
-        # Call bazel package identification extention
+        # Call bazel package identification extension
         # (for append bazel logic).
         data = extract_data(tmp_desc.path)
 
         # Validate that is bazel package logic.
-        if data['name'] == None:
+        if data['name'] is None:
             return
 
         # Add dependencies.
@@ -55,7 +53,7 @@ class RosBazelPackageIdentification(PackageIdentificationExtensionPoint):
         tmp_desc.dependencies['run'] |= data['depends']['run']
         tmp_desc.dependencies['test'] |= data['depends']['test']
 
-        # Update package descriptor instance (if has valide build type).
+        # Update package descriptor instance (if has valid build type).
         desc.type = tmp_desc.type
         desc.name = tmp_desc.name
         desc.dependencies = tmp_desc.dependencies
