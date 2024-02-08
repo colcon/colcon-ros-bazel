@@ -7,12 +7,14 @@ colcon
 deepcopy
 gaillard
 iterdir
+linter
 lstrip
 mickael
 nargs
 noqa
 pathlib
 plugin
+pydocstyle
 pytest
 rtype
 scspell
